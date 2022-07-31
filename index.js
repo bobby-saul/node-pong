@@ -9,14 +9,14 @@ TODO:
     - quite
 
   - game
-    - show score
+    x show score
     - pause
-    - move player 1
-    - move player 2
-    - move ball
-    - when score
+    x move player 1
+    x move player 2
+    x move ball
+    x when score
     - when game over
-    - computer for 1 player
+    - computer for 1 player mode
 
   - pause screen
     - score
@@ -36,6 +36,7 @@ if (process.stdin.isTTY) {
 const CLOCK_CYCLE = 100;
 const MIN_ROW = 15;
 const MIN_COLUMN = 50;
+const CLEAR_TERMINAL = "\033c";
 const BLACK_BACKGROUND = "\x1b[40m";
 const RED = "\x1b[31m";
 const GREEN = "\x1b[32m";
@@ -54,8 +55,10 @@ function main() {
   };
   let p1Position = Math.floor(MIN_ROW / 2);
   let p1Direction = 0;
+  let p1Score = 0;
   let p2Position = Math.floor(MIN_ROW / 2);
   let p2Direction = 0;
+  let p2Score = 0;
 
   // Main process
   const clock = setInterval(() => {
@@ -132,8 +135,59 @@ function main() {
     }
     p2Direction = 0;
     // Move ball
-    // Check for goal
+    ballPosition.x = ballPosition.x + ballPosition.direction;
+    ballPosition.y = ballPosition.y + ballPosition.angle;
     // Check for bounce
+    // Off walls
+    if (ballPosition.y <= 1) {
+      ballPosition.y === 2;
+      ballPosition.angle = 1;
+    } else if (ballPosition.y >= MIN_ROW - 2) {
+      ballPosition.y === MIN_ROW - 3;
+      ballPosition.angle = -1;
+    }
+    // Off player one
+    if (ballPosition.x === 2 && ballPosition.y === p1Position) {
+      ballPosition.direction = 1;
+      ballPosition.angle = 0;
+    } else if (ballPosition.x === 2 && ballPosition.y === p1Position + 1) {
+      ballPosition.direction = 1;
+      ballPosition.angle = 1;
+    } else if (ballPosition.x === 2 && ballPosition.y === p1Position - 1) {
+      ballPosition.direction = 1;
+      ballPosition.angle = -1;
+    }
+    // Off player two
+    if (ballPosition.x === MIN_COLUMN - 3 && ballPosition.y === p2Position) {
+      ballPosition.direction = -1;
+      ballPosition.angle = 0;
+    } else if (
+      ballPosition.x === MIN_COLUMN - 3 &&
+      ballPosition.y === p2Position + 1
+    ) {
+      ballPosition.direction = -1;
+      ballPosition.angle = 1;
+    } else if (
+      ballPosition.x === MIN_COLUMN - 3 &&
+      ballPosition.y === p2Position - 1
+    ) {
+      ballPosition.direction = -1;
+      ballPosition.angle = -1;
+    }
+    // Check for goal
+    if (ballPosition.x === 0 || ballPosition.x === MIN_COLUMN - 1) {
+      // Goal function
+      if (ballPosition.x === 0) {
+        p2Score = p2Score + 1;
+      } else {
+        p1Score = p1Score + 1;
+      }
+      // Reset ball
+      ballPosition.x = Math.floor(MIN_COLUMN / 2);
+      ballPosition.y = Math.floor(MIN_ROW / 2);
+      ballPosition.direction = Math.random() > 0.5 ? 1 : -1;
+      ballPosition.angle = 0;
+    }
   }
 
   function getBoundary() {
@@ -156,12 +210,7 @@ function main() {
 
   function drawScreen() {
     // Clear the screen first
-    // process.stdout.cursorTo(0, -1);
-    // process.stdout.clearScreenDown();
-    // process.stdout.write("\x1Bc");
-    // console.clear();
-    // console.log("\033[2J");
-    process.stdout.write("\033c");
+    process.stdout.write(CLEAR_TERMINAL);
 
     if (!largeEnough) {
       return console.log(
@@ -185,8 +234,12 @@ function main() {
       process.stdout.write(
         BLACK_BACKGROUND + row.join("") + ASCII_RESET + "\n"
       );
-      // console.log(row.join(""));
     });
+    process.stdout.write(
+      `${WHITE}Player 1: ${RED + p1Score + WHITE} Player 2: ${
+        GREEN + p2Score + WHITE
+      }\n`
+    );
   }
 }
 
