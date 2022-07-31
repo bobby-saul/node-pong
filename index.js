@@ -42,6 +42,8 @@ const RED = "\x1b[31m";
 const GREEN = "\x1b[32m";
 const WHITE = "\x1b[37m";
 const ASCII_RESET = "\x1b[0m";
+const SOUND = "\x07";
+const HIDE_CURSOR = "\x1b[?25l";
 
 function main() {
   // Global variables
@@ -115,7 +117,7 @@ function main() {
   // Functions
   function checkSize() {
     return (
-      process.stdout.rows >= MIN_ROW && process.stdout.columns >= MIN_COLUMN
+      process.stdout.rows >= MIN_ROW + 1 && process.stdout.columns >= MIN_COLUMN
     );
   }
 
@@ -150,29 +152,35 @@ function main() {
     if (ballPosition.x === 2 && ballPosition.y === p1Position) {
       ballPosition.direction = 1;
       ballPosition.angle = 0;
+      process.stdout.write(SOUND);
     } else if (ballPosition.x === 2 && ballPosition.y === p1Position + 1) {
       ballPosition.direction = 1;
       ballPosition.angle = 1;
+      process.stdout.write(SOUND);
     } else if (ballPosition.x === 2 && ballPosition.y === p1Position - 1) {
       ballPosition.direction = 1;
       ballPosition.angle = -1;
+      process.stdout.write(SOUND);
     }
     // Off player two
     if (ballPosition.x === MIN_COLUMN - 3 && ballPosition.y === p2Position) {
       ballPosition.direction = -1;
       ballPosition.angle = 0;
+      process.stdout.write(SOUND);
     } else if (
       ballPosition.x === MIN_COLUMN - 3 &&
       ballPosition.y === p2Position + 1
     ) {
       ballPosition.direction = -1;
       ballPosition.angle = 1;
+      process.stdout.write(SOUND);
     } else if (
       ballPosition.x === MIN_COLUMN - 3 &&
       ballPosition.y === p2Position - 1
     ) {
       ballPosition.direction = -1;
       ballPosition.angle = -1;
+      process.stdout.write(SOUND);
     }
     // Check for goal
     if (ballPosition.x === 0 || ballPosition.x === MIN_COLUMN - 1) {
@@ -214,7 +222,9 @@ function main() {
 
     if (!largeEnough) {
       return console.log(
-        `The terminal size is too small. A minimum of ${MIN_COLUMN}x${MIN_ROW} character size is needed to play pong.`
+        `The terminal size is too small. A minimum of ${MIN_COLUMN}x${
+          MIN_ROW + 1
+        } character size is needed to play pong.`
       );
     }
 
@@ -238,8 +248,9 @@ function main() {
     process.stdout.write(
       `${WHITE}Player 1: ${RED + p1Score + WHITE} Player 2: ${
         GREEN + p2Score + WHITE
-      }\n`
+      }`
     );
+    process.stderr.write(HIDE_CURSOR);
   }
 }
 
