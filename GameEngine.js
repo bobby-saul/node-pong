@@ -1,8 +1,5 @@
 const ScreenInterface = require("./ScreenInterface");
 class GameEngine {
-  clock;
-  running = false;
-
   /**
    * Creates a game engine object.
    * @param {Process} process The node process.
@@ -14,6 +11,8 @@ class GameEngine {
     this.clockCycle = clockCycle;
     this.screens = screens;
     this.currentScreen = screens[0];
+    this.clock;
+    this.running = false;
   }
 
   /**
