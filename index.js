@@ -6,7 +6,7 @@ TODO:
     - mode 1 player or 2 player
     - help
       - keys
-    - quite
+    - quit
 
   - game
     x show score
@@ -29,6 +29,7 @@ TODO:
 const process = require("process");
 const readline = require("readline");
 const settings = require("./settings");
+const GameEngine = require("./GameEngine");
 const GameScreen = require("./GameScreen");
 readline.emitKeypressEvents(process.stdin);
 if (process.stdin.isTTY) {
@@ -37,18 +38,33 @@ if (process.stdin.isTTY) {
 
 function main() {
   // Global variables
-  let largeEnough = checkSize();
   const gameScreen = new GameScreen(process);
-  let screen;
-  changeScreens(gameScreen);
+  const gameEngine = new GameEngine(process, settings.CLOCK_CYCLE, [
+    gameScreen,
+  ]);
 
-  // Main process
-  const clock = setInterval(() => {
-    if (largeEnough) {
-      if (screen) {
-        screen.onClockTick();
-      }
+  // Start the main function.
+  checkSize();
+
+  // On process changes.
+  process.stdout.on("resize", checkSize);
+  process.on("exit", () => {
+    console.log(
+      settings.ASCII_RESET + "\nQuitting node pong" + settings.SHOW_CURSOR
+    );
+  });
+
+  /**
+   * Checks if the process screen is at a proper size and starts/stops the game engine.
+   */
+  function checkSize() {
+    if (
+      process.stdout.rows >= settings.MIN_ROW + 1 &&
+      process.stdout.columns >= settings.MIN_COLUMN
+    ) {
+      gameEngine.start();
     } else {
+      gameEngine.stop();
       process.stdout.write(settings.CLEAR_TERMINAL);
       console.log(
         `The terminal size is too small. A minimum of ${settings.MIN_COLUMN}x${
@@ -56,34 +72,6 @@ function main() {
         } character size is needed to play pong.`
       );
     }
-  }, settings.CLOCK_CYCLE);
-  process.stdout.on("resize", () => {
-    largeEnough = checkSize();
-    if (screen) {
-      screen.onResize();
-    }
-  });
-  process.stdin.on("keypress", (str, key) => {
-    if (screen) {
-      screen.onKeyPress(str, key);
-    }
-  });
-  process.on("exit", () => {
-    clearInterval(clock);
-    console.log(
-      settings.ASCII_RESET + "\nQuitting node pong" + settings.SHOW_CURSOR
-    );
-  });
-
-  // Functions
-  function checkSize() {
-    return (
-      process.stdout.rows >= settings.MIN_ROW + 1 &&
-      process.stdout.columns >= settings.MIN_COLUMN
-    );
-  }
-  function changeScreens(newScreen) {
-    screen = newScreen;
   }
 }
 
