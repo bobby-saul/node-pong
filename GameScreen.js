@@ -1,4 +1,4 @@
-const ScreenInterface = require("./screenInterface");
+const ScreenInterface = require("./ScreenInterface");
 const settings = require("./settings");
 
 class GameScreen extends ScreenInterface {

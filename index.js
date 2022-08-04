@@ -29,7 +29,7 @@ TODO:
 const process = require("process");
 const readline = require("readline");
 const settings = require("./settings");
-const GameScreen = require("./gameScreen");
+const GameScreen = require("./GameScreen");
 readline.emitKeypressEvents(process.stdin);
 if (process.stdin.isTTY) {
   process.stdin.setRawMode(true);
