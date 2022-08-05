@@ -8,6 +8,22 @@ class ScreenInterface {
     this.process = process;
     this.width = process.stdout.columns;
     this.height = process.stdout.rows;
+    this.gameEngine;
+  }
+
+  /**
+   * Function to be called when the screen becomes the active screen. Use this
+   * function to pass state between screens when switching.
+   * @param {Object} state The state to use for setting this screen to active.
+   */
+  active(state) {}
+
+  /**
+   * Sets the game engine for the screen.
+   * @param {GameEngine} engine The game engine.
+   */
+  setGameEngine(engine) {
+    this.gameEngine = engine;
   }
 
   /**
@@ -39,7 +55,9 @@ class ScreenInterface {
   /**
    * Function that draws the screen.
    */
-  drawScreen() {}
+  drawScreen() {
+    console.log(this.name);
+  }
 }
 
 module.exports = ScreenInterface;

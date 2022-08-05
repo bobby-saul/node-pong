@@ -3,12 +3,12 @@
 /*
 TODO:
   - start screen
-    - mode 1 player or 2 player
+    x 1 player
+    x 2 player
     - help
-      - keys
-    - quit
+    x quit
 
-  - game
+  - game screen
     x show score
     - pause
     x move player 1
@@ -21,9 +21,19 @@ TODO:
   - pause screen
     - score
     - resume
-    - reset
     - help
+    - restart
     - quit
+
+  - game over
+    - score
+    - rematch
+    - back
+    - quit
+
+  - help
+    - instructions
+    - back
 */
 
 const process = require("process");
@@ -31,6 +41,8 @@ const readline = require("readline");
 const settings = require("./settings");
 const GameEngine = require("./GameEngine");
 const GameScreen = require("./GameScreen");
+const StartScreen = require("./StartScreen");
+const MenuItem = require("./MenuItem");
 readline.emitKeypressEvents(process.stdin);
 if (process.stdin.isTTY) {
   process.stdin.setRawMode(true);
@@ -38,8 +50,15 @@ if (process.stdin.isTTY) {
 
 function main() {
   // Global variables
+  const startScreen = new StartScreen(process, [
+    new MenuItem("One Player", startGame),
+    new MenuItem("Two Players", startGame),
+    new MenuItem("Help", displayHelp),
+    new MenuItem("Quit", exitProgram),
+  ]);
   const gameScreen = new GameScreen(process);
   const gameEngine = new GameEngine(process, settings.CLOCK_CYCLE, [
+    startScreen,
     gameScreen,
   ]);
 
@@ -55,7 +74,32 @@ function main() {
   });
 
   /**
-   * Checks if the process screen is at a proper size and starts/stops the game engine.
+   * Displays the game screen.
+   * @param {GameEngine} gameEngine The game engine.
+   */
+  function startGame(gameEngine) {
+    gameEngine.setCurrentScreen("GameScreen");
+  }
+
+  /**
+   * Displays the help screen.
+   * @param {GameEngine} gameEngine The game engine.
+   */
+  function displayHelp(gameEngine) {
+    console.log("help");
+    // gameEngine.setCurrentScreen("HelpScreen");
+  }
+
+  /**
+   * Exits the program.
+   */
+  function exitProgram() {
+    process.exit();
+  }
+
+  /**
+   * Checks if the process screen is at a proper size and starts/stops the game
+   * engine.
    */
   function checkSize() {
     if (
