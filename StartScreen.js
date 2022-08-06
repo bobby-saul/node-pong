@@ -10,10 +10,6 @@ class StartScreen extends MenuScreen {
       settings.WHITE + "Node Pong - Start Screen"
     );
   }
-
-  active() {
-    this.position = 0;
-  }
 }
 
 module.exports = StartScreen;

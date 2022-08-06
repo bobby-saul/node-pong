@@ -49,7 +49,8 @@ class GameEngine {
 
   start() {
     if (!this.running) {
-      this.process.stdin.on("keypress", this.onKeyPress.bind(this));
+      this.bindingKeypress = this.onKeyPress.bind(this);
+      this.process.stdin.on("keypress", this.bindingKeypress);
       this.clock = setInterval(() => {
         this.currentScreen.onClockTick();
       }, this.clockCycle);
@@ -59,6 +60,7 @@ class GameEngine {
 
   stop() {
     if (this.running) {
+      this.process.stdin.off("keypress", this.bindingKeypress);
       clearInterval(this.clock);
       this.running = false;
     }

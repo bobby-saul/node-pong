@@ -17,6 +17,10 @@ class MenuScreen extends ScreenInterface {
     this.message = message;
   }
 
+  active() {
+    this.position = 0;
+  }
+
   onKeyPress(str, key) {
     super.onKeyPress(str, key);
     switch (key.name) {

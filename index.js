@@ -5,7 +5,7 @@ TODO:
   - start screen
     x 1 player
     x 2 player
-    - help
+    x help
     x quit
 
   - game screen
@@ -31,9 +31,9 @@ TODO:
     - back
     - quit
 
-  - help
-    - instructions
-    - back
+  x help
+    x instructions
+    x back
 */
 
 const process = require("process");
@@ -43,6 +43,7 @@ const GameEngine = require("./GameEngine");
 const GameScreen = require("./GameScreen");
 const StartScreen = require("./StartScreen");
 const MenuItem = require("./MenuItem");
+const HelpScreen = require("./HelpScreen");
 readline.emitKeypressEvents(process.stdin);
 if (process.stdin.isTTY) {
   process.stdin.setRawMode(true);
@@ -57,9 +58,11 @@ function main() {
     new MenuItem("Quit", exitProgram),
   ]);
   const gameScreen = new GameScreen(process);
+  const helpScreen = new HelpScreen(process);
   const gameEngine = new GameEngine(process, settings.CLOCK_CYCLE, [
     startScreen,
     gameScreen,
+    helpScreen,
   ]);
 
   // Start the main function.
@@ -86,8 +89,10 @@ function main() {
    * @param {GameEngine} gameEngine The game engine.
    */
   function displayHelp(gameEngine) {
-    console.log("help");
-    // gameEngine.setCurrentScreen("HelpScreen");
+    gameEngine.setCurrentScreen("HelpScreen", {
+      backScreen: "StartScreen",
+      saved: {},
+    });
   }
 
   /**
