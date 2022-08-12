@@ -2,7 +2,7 @@
 
 /*
 TODO:
-  - start screen
+  x start screen
     x 1 player
     x 2 player
     x help
@@ -10,7 +10,7 @@ TODO:
 
   - game screen
     x show score
-    - pause
+    x pause
     x move player 1
     x move player 2
     x move ball
@@ -18,12 +18,12 @@ TODO:
     - when game over
     - computer for 1 player mode
 
-  - pause screen
-    - score
-    - resume
-    - help
-    - restart
-    - quit
+  x pause screen
+    x score
+    x resume
+    x help
+    x restart
+    x quit
 
   - game over
     - score
@@ -42,8 +42,8 @@ const settings = require("./settings");
 const GameEngine = require("./GameEngine");
 const GameScreen = require("./GameScreen");
 const StartScreen = require("./StartScreen");
-const MenuItem = require("./MenuItem");
 const HelpScreen = require("./HelpScreen");
+const PauseScreen = require("./PauseScreen");
 readline.emitKeypressEvents(process.stdin);
 if (process.stdin.isTTY) {
   process.stdin.setRawMode(true);
@@ -51,18 +51,15 @@ if (process.stdin.isTTY) {
 
 function main() {
   // Global variables
-  const startScreen = new StartScreen(process, [
-    new MenuItem("One Player", startGame),
-    new MenuItem("Two Players", startGame),
-    new MenuItem("Help", displayHelp),
-    new MenuItem("Quit", exitProgram),
-  ]);
+  const startScreen = new StartScreen(process);
   const gameScreen = new GameScreen(process);
   const helpScreen = new HelpScreen(process);
+  const pauseScreen = new PauseScreen(process);
   const gameEngine = new GameEngine(process, settings.CLOCK_CYCLE, [
     startScreen,
     gameScreen,
     helpScreen,
+    pauseScreen,
   ]);
 
   // Start the main function.
@@ -75,32 +72,6 @@ function main() {
       settings.ASCII_RESET + "\nQuitting node pong" + settings.SHOW_CURSOR
     );
   });
-
-  /**
-   * Displays the game screen.
-   * @param {GameEngine} gameEngine The game engine.
-   */
-  function startGame(gameEngine) {
-    gameEngine.setCurrentScreen("GameScreen");
-  }
-
-  /**
-   * Displays the help screen.
-   * @param {GameEngine} gameEngine The game engine.
-   */
-  function displayHelp(gameEngine) {
-    gameEngine.setCurrentScreen("HelpScreen", {
-      backScreen: "StartScreen",
-      saved: {},
-    });
-  }
-
-  /**
-   * Exits the program.
-   */
-  function exitProgram() {
-    process.exit();
-  }
 
   /**
    * Checks if the process screen is at a proper size and starts/stops the game

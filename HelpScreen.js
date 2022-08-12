@@ -18,20 +18,18 @@ class HelpScreen extends MenuScreen {
     super(process, "HelpScreen", [backMenuItem], HELP_TEXT);
     this.backMenuItem = backMenuItem;
     this.backScreen;
-    this.savedState;
   }
 
   active(state) {
     // Set the states for the back function.
     this.backScreen = state.backScreen;
-    this.savedState = state.saved;
     this.backMenuItem.setOnSelect(this.goBack.bind(this));
     // Draw the menu once.
     super.drawScreen();
   }
 
   goBack() {
-    this.gameEngine.setCurrentScreen(this.backScreen, this.savedState);
+    this.gameEngine.setCurrentScreen(this.backScreen);
   }
 
   // Don't keep reprinting so that you can scroll.

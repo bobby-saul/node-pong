@@ -6,6 +6,10 @@ class GameScreen extends ScreenInterface {
     super(process);
     this.name = "GameScreen";
     this.players = 2;
+    this.resetGame();
+  }
+
+  resetGame() {
     this.p1 = {
       direction: 0,
       position: Math.floor(settings.MIN_ROW / 2),
@@ -22,6 +26,15 @@ class GameScreen extends ScreenInterface {
       direction: Math.random() > 0.5 ? 1 : -1,
       vertical: 0,
     };
+  }
+
+  active(state) {
+    if (state && state.restart) {
+      this.resetGame();
+    }
+    if (state && state.players) {
+      this.players = state.players;
+    }
   }
 
   onKeyPress(str, key) {
@@ -47,9 +60,20 @@ class GameScreen extends ScreenInterface {
           this.p1.direction = -1;
         }
         break;
+      case "p":
+      case "escape":
+        this.gameEngine.setCurrentScreen("PauseScreen", this.getScore());
+        break;
       default:
         break;
     }
+  }
+
+  getScore() {
+    return {
+      p1: this.p1.score,
+      p2: this.p2.score,
+    };
   }
 
   onClockTick() {
