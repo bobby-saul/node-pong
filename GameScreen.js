@@ -1,5 +1,6 @@
 const ScreenInterface = require("./ScreenInterface");
 const settings = require("./settings");
+const PLAY_TO = 11;
 
 class GameScreen extends ScreenInterface {
   constructor(process) {
@@ -153,7 +154,7 @@ class GameScreen extends ScreenInterface {
     }
     // Check for goal
     if (this.ball.x === 0 || this.ball.x === settings.MIN_COLUMN - 1) {
-      // Goal function
+      // Add point to the proper player
       if (this.ball.x === 0) {
         this.p2.score = this.p2.score + 1;
       } else {
@@ -164,6 +165,17 @@ class GameScreen extends ScreenInterface {
       this.ball.y = Math.floor(settings.MIN_ROW / 2);
       this.ball.direction = Math.random() > 0.5 ? 1 : -1;
       this.ball.vertical = 0;
+      // Check if the game is over.
+      this.checkIfGameOver();
+    }
+  }
+
+  checkIfGameOver() {
+    if (
+      (this.p1.score >= PLAY_TO || this.p2.score >= PLAY_TO) &&
+      Math.abs(this.p1.score - this.p2.score) > 1
+    ) {
+      this.gameEngine.setCurrentScreen("GameOverScreen", this.getScore());
     }
   }
 

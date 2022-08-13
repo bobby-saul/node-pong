@@ -15,7 +15,7 @@ TODO:
     x move player 2
     x move ball
     x when score
-    - when game over
+    x when game over
     - computer for 1 player mode
 
   x pause screen
@@ -25,11 +25,10 @@ TODO:
     x restart
     x quit
 
-  - game over
-    - score
-    - rematch
-    - back
-    - quit
+  x game over
+    x score
+    x rematch
+    x quit
 
   x help
     x instructions
@@ -44,6 +43,7 @@ const GameScreen = require("./GameScreen");
 const StartScreen = require("./StartScreen");
 const HelpScreen = require("./HelpScreen");
 const PauseScreen = require("./PauseScreen");
+const GameOverScreen = require("./GameOverScreen");
 readline.emitKeypressEvents(process.stdin);
 if (process.stdin.isTTY) {
   process.stdin.setRawMode(true);
@@ -55,11 +55,13 @@ function main() {
   const gameScreen = new GameScreen(process);
   const helpScreen = new HelpScreen(process);
   const pauseScreen = new PauseScreen(process);
+  const gameOverScreen = new GameOverScreen(process);
   const gameEngine = new GameEngine(process, settings.CLOCK_CYCLE, [
     startScreen,
     gameScreen,
     helpScreen,
     pauseScreen,
+    gameOverScreen,
   ]);
 
   // Start the main function.
