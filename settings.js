@@ -11,4 +11,7 @@ module.exports = {
   SOUND: "\x07",
   HIDE_CURSOR: "\x1b[?25l",
   SHOW_CURSOR: "\x1b[?25h",
+  EASY: "easy",
+  MEDIUM: "medium",
+  HARD: "hard",
 };

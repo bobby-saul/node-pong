@@ -1,40 +1,5 @@
 #!/usr/bin/env node
 
-/*
-TODO:
-  x start screen
-    x 1 player
-    x 2 player
-    x help
-    x quit
-
-  - game screen
-    x show score
-    x pause
-    x move player 1
-    x move player 2
-    x move ball
-    x when score
-    x when game over
-    - computer for 1 player mode
-
-  x pause screen
-    x score
-    x resume
-    x help
-    x restart
-    x quit
-
-  x game over
-    x score
-    x rematch
-    x quit
-
-  x help
-    x instructions
-    x back
-*/
-
 const process = require("process");
 const readline = require("readline");
 const settings = require("./settings");
@@ -44,10 +9,14 @@ const StartScreen = require("./StartScreen");
 const HelpScreen = require("./HelpScreen");
 const PauseScreen = require("./PauseScreen");
 const GameOverScreen = require("./GameOverScreen");
+
 readline.emitKeypressEvents(process.stdin);
 if (process.stdin.isTTY) {
   process.stdin.setRawMode(true);
 }
+process.nodePong = {
+  difficulty: settings.EASY,
+};
 
 function main() {
   // Global variables

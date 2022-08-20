@@ -70,6 +70,16 @@ class GameScreen extends ScreenInterface {
     }
   }
 
+  movePlayerTwo() {
+    switch (this.process.nodePong.difficulty) {
+      case settings.EASY:
+        this.p2.direction = Math.floor(Math.random() * 3) - 1;
+        break;
+      default:
+        break;
+    }
+  }
+
   getScore() {
     return {
       p1: this.p1.score,
@@ -94,6 +104,9 @@ class GameScreen extends ScreenInterface {
     }
     this.p1.direction = 0;
     // Player two
+    if (this.players === 1) {
+      this.movePlayerTwo();
+    }
     if (this.p2.direction === 1 && this.p2.position !== 2) {
       this.p2.position = this.p2.position - 1;
     } else if (
