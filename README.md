@@ -8,6 +8,7 @@ TODO:
   - [x] 1 player
   - [x] 2 player
   - [x] help
+  - [x] settings
   - [x] quit
 - [x] game screen
   - [x] show score
@@ -31,8 +32,8 @@ TODO:
   - [x] score
   - [x] rematch
   - [x] quit
-- [ ] settings 
-  - [ ] difficulty
+- [x] settings 
+  - [x] difficulty
 - [x] help
   - [x] instructions
   - [x] back

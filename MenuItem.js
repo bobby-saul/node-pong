@@ -17,6 +17,14 @@ class MenuItem {
   setOnSelect(onSelect) {
     this.onSelect = onSelect;
   }
+
+  /**
+   * Sets the menu items name.
+   * @param {string} name The name to set the menu item.
+   */
+  setName(name) {
+    this.name = name;
+  }
 }
 
 module.exports = MenuItem;

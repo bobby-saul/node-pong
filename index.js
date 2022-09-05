@@ -9,6 +9,7 @@ const StartScreen = require("./StartScreen");
 const HelpScreen = require("./HelpScreen");
 const PauseScreen = require("./PauseScreen");
 const GameOverScreen = require("./GameOverScreen");
+const SettingsScreen = require("./SettingsScreen");
 
 readline.emitKeypressEvents(process.stdin);
 if (process.stdin.isTTY) {
@@ -23,12 +24,14 @@ function main() {
   const startScreen = new StartScreen(process);
   const gameScreen = new GameScreen(process);
   const helpScreen = new HelpScreen(process);
+  const settingsScreen = new SettingsScreen(process);
   const pauseScreen = new PauseScreen(process);
   const gameOverScreen = new GameOverScreen(process);
   const gameEngine = new GameEngine(process, settings.CLOCK_CYCLE, [
     startScreen,
     gameScreen,
     helpScreen,
+    settingsScreen,
     pauseScreen,
     gameOverScreen,
   ]);
