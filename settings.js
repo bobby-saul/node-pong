@@ -1,5 +1,5 @@
 module.exports = {
-  CLOCK_CYCLE: 100,
+  CLOCK_CYCLE: 80,
   MIN_ROW: 15,
   MIN_COLUMN: 50,
   CLEAR_TERMINAL: "\033c",

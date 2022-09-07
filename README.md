@@ -18,10 +18,10 @@ TODO:
   - [x] move ball
   - [x] when score
   - [x] when game over
-  - [ ] computer for 1 player mode
+  - [x] computer for 1 player mode
     - [x] easy
-    - [ ] medium
-    - [ ] hard
+    - [x] medium
+    - [x] hard
 - [x] pause screen
   - [x] score
   - [x] resume

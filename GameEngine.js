@@ -47,6 +47,15 @@ class GameEngine {
     this.currentScreen.onKeyPress(str, key);
   }
 
+  setClockCycle(cycle) {
+    const restart = this.running;
+    this.stop();
+    this.clockCycle = cycle;
+    if (restart) {
+      this.start();
+    }
+  }
+
   start() {
     if (!this.running) {
       this.bindingKeypress = this.onKeyPress.bind(this);

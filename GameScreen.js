@@ -27,6 +27,8 @@ class GameScreen extends ScreenInterface {
       direction: Math.random() > 0.5 ? 1 : -1,
       vertical: 0,
     };
+    this.setCpuPosition();
+    this.rallyCount = 0;
   }
 
   active(state) {
@@ -35,6 +37,17 @@ class GameScreen extends ScreenInterface {
     }
     if (state && state.players) {
       this.players = state.players;
+    }
+    switch (this.process.nodePong.difficulty) {
+      case settings.MEDIUM:
+        this.gameEngine.setClockCycle(settings.CLOCK_CYCLE - 15);
+        break;
+      case settings.HARD:
+        this.gameEngine.setClockCycle(settings.CLOCK_CYCLE - 30);
+        break;
+      default:
+        this.gameEngine.setClockCycle(settings.CLOCK_CYCLE);
+        break;
     }
   }
 
@@ -63,6 +76,7 @@ class GameScreen extends ScreenInterface {
         break;
       case "p":
       case "escape":
+        this.gameEngine.setClockCycle(settings.CLOCK_CYCLE);
         this.gameEngine.setCurrentScreen("PauseScreen", this.getScore());
         break;
       default:
@@ -71,13 +85,78 @@ class GameScreen extends ScreenInterface {
   }
 
   movePlayerTwo() {
+    if (this.ball.direction === -1) {
+      this.p2.direction = Math.floor(Math.random() * 3) - 1;
+      return;
+    }
+    if (this.p2.position > this.cpuPosition) {
+      this.p2.direction = 1;
+      return;
+    }
+    if (this.p2.position < this.cpuPosition) {
+      this.p2.direction = -1;
+      return;
+    }
+    this.p2.direction = 0;
+  }
+
+  getFutureY() {
+    let currentY = this.ball.y;
+    let currentX = this.ball.x;
+    let currentVert = -this.ball.vertical;
+    while (currentX < settings.MIN_COLUMN - 1) {
+      currentX = currentX + 1;
+      currentY = currentY + currentVert;
+      if (currentY <= 1) {
+        currentY = 2;
+        currentVert = 1;
+      }
+      if (currentY >= settings.MIN_ROW - 2) {
+        currentY = settings.MIN_ROW - 3;
+        currentVert = -1;
+      }
+    }
+    return currentY;
+  }
+
+  setCpuPosition() {
+    // Find where the ball is going to hit
+    this.rallyCount = this.rallyCount + 1;
+    let willHitAt = this.ball.y;
+    if (this.ball.vertical !== 0) {
+      willHitAt = this.getFutureY();
+    }
+    // Depending on the difficulty set the cpu position to be where the ball
+    // will be +/-1
+    let difficultyCoefficient = 90;
     switch (this.process.nodePong.difficulty) {
-      case settings.EASY:
-        this.p2.direction = Math.floor(Math.random() * 3) - 1;
+      case settings.MEDIUM:
+        difficultyCoefficient = 180;
         break;
+      case settings.HARD:
+        difficultyCoefficient = 300;
       default:
         break;
     }
+    // if its an easy return
+    if (this.ball.vertical === 0) {
+      if ((Math.random() > 0.5 && willHitAt > 3) || willHitAt === 12) {
+        willHitAt = willHitAt - 1;
+      } else {
+        willHitAt = willHitAt + 1;
+      }
+    } else {
+      if ((Math.random() * difficultyCoefficient) / this.rallyCount < 25) {
+        if (willHitAt > settings.MIN_ROW / 2) {
+          willHitAt = willHitAt - 2;
+        } else {
+          willHitAt = willHitAt + 2;
+        }
+      } else {
+        willHitAt = willHitAt + Math.floor(Math.random() * 3) - 1;
+      }
+    }
+    this.cpuPosition = willHitAt;
   }
 
   getScore() {
@@ -132,14 +211,17 @@ class GameScreen extends ScreenInterface {
     if (this.ball.x === 2 && this.ball.y === this.p1.position) {
       this.ball.direction = 1;
       this.ball.vertical = 0;
+      this.setCpuPosition();
       process.stdout.write(settings.SOUND);
     } else if (this.ball.x === 2 && this.ball.y === this.p1.position + 1) {
       this.ball.direction = 1;
       this.ball.vertical = 1;
+      this.setCpuPosition();
       process.stdout.write(settings.SOUND);
     } else if (this.ball.x === 2 && this.ball.y === this.p1.position - 1) {
       this.ball.direction = 1;
       this.ball.vertical = -1;
+      this.setCpuPosition();
       process.stdout.write(settings.SOUND);
     }
     // Off player two
@@ -178,6 +260,8 @@ class GameScreen extends ScreenInterface {
       this.ball.y = Math.floor(settings.MIN_ROW / 2);
       this.ball.direction = Math.random() > 0.5 ? 1 : -1;
       this.ball.vertical = 0;
+      this.setCpuPosition();
+      this.rallyCount = 0;
       // Check if the game is over.
       this.checkIfGameOver();
     }
