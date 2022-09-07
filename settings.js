@@ -1,3 +1,5 @@
+const path = require("path");
+
 module.exports = {
   CLOCK_CYCLE: 80,
   MIN_ROW: 15,
@@ -14,4 +16,5 @@ module.exports = {
   EASY: "easy",
   MEDIUM: "medium",
   HARD: "hard",
+  CONFIG_FILE: path.resolve("./config.json"),
 };

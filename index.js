@@ -10,14 +10,17 @@ const HelpScreen = require("./HelpScreen");
 const PauseScreen = require("./PauseScreen");
 const GameOverScreen = require("./GameOverScreen");
 const SettingsScreen = require("./SettingsScreen");
+const fs = require("fs");
+
+const configuration = fs.existsSync(settings.CONFIG_FILE)
+  ? JSON.parse(fs.readFileSync(settings.CONFIG_FILE))
+  : { difficulty: settings.EASY };
 
 readline.emitKeypressEvents(process.stdin);
 if (process.stdin.isTTY) {
   process.stdin.setRawMode(true);
 }
-process.nodePong = {
-  difficulty: settings.EASY,
-};
+process.nodePong = configuration;
 
 function main() {
   // Global variables

@@ -146,6 +146,7 @@ class GameScreen extends ScreenInterface {
         willHitAt = willHitAt + 1;
       }
     } else {
+      // Randomly decide if the difficulty will return
       if ((Math.random() * difficultyCoefficient) / this.rallyCount < 25) {
         if (willHitAt > settings.MIN_ROW / 2) {
           willHitAt = willHitAt - 2;

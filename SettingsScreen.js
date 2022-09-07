@@ -1,3 +1,4 @@
+const fs = require("fs");
 const MenuScreen = require("./MenuScreen");
 const MenuItem = require("./MenuItem");
 const settings = require("./settings");
@@ -40,6 +41,10 @@ class SettingsScreen extends MenuScreen {
 
   setDifficulty(difficulty) {
     process.nodePong.difficulty = difficulty;
+    fs.writeFileSync(
+      settings.CONFIG_FILE,
+      JSON.stringify(this.process.nodePong, null, 2)
+    );
     this.gameEngine.setCurrentScreen("StartScreen");
   }
 }
